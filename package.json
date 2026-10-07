@@ -1,0 +1,29 @@
+{
+  "name": "js-38",
+  "version": "1.0.0",
+  "description": "",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "dev": "npx parcel src/index.html",
+    "build": "parcel build src/index.html --public-url /js-38/",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist -b gh-pages",
+    "server": "npx json-server students.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pavlo20031/js-38.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pavlo20031/js-38/issues"
+  },
+  "homepage": "https://github.com/pavlo20031/js-38#readme",
+  "dependencies": {
+    "gh-pages": "^6.3.0",
+    "json-server": "^1.0.0-beta.15",
+    "parcel": "^2.16.4"
+  }
+}
