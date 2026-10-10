@@ -719,13 +719,38 @@ var _renderStudents = require("./render/renderStudents");
 var _addStudent = require("./js/addStudent");
 var _updateStudent = require("./js/updateStudent");
 var _deleteStudent = require("./js/deleteStudent");
+const tbodyRef = document.querySelector("tbody");
+const formRef = document.querySelector("#add-student-form");
+const btnRef = document.querySelector("#get-students-btn");
+btnRef.addEventListener("click", (evt)=>{
+    renderList();
+});
+let lastId = 6;
+formRef.addEventListener("submit", (evt)=>{
+    evt.preventDefault();
+    const element = evt.currentTarget.elements;
+    const studentsData = {
+        id: lastId++,
+        name: element.name.value,
+        age: element.age.value,
+        course: element.course.value,
+        skills: element.skills.value,
+        email: element.email.value,
+        isEnrolled: element.isEnrolled.checked
+    };
+    (0, _addStudent.addStudent)(studentsData).then((res)=>renderList());
+    formRef.reset();
+});
+function renderList() {
+    (0, _fetchStudents.getStudents)().then((res)=>tbodyRef.innerHTML = (0, _renderStudents.renderStudents)(res));
+}
 
 },{"./api/fetchStudents":"fhHaW","./render/renderStudents":"2omt9","./js/addStudent":"b1I0R","./js/updateStudent":"cHHOw","./js/deleteStudent":"f6Ycz"}],"fhHaW":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getStudents", ()=>getStudents);
 function getStudents() {
-// твій код
+    return fetch("http://localhost:3000/students").then((res)=>res.json());
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"jnFvT":[function(require,module,exports,__globalThis) {
@@ -763,7 +788,19 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "renderStudents", ()=>renderStudents);
 function renderStudents(students) {
-// твій код
+    const createMarkup = students.map(({ id, name, age, course, skills, email, isEnrolled })=>{
+        return `<tr id="${id}">
+                <th>${id}</th>
+                <th>${name}</th>
+                <th>${age}</th>
+                <th>${course}</th>
+                <th>${skills}</th>
+                <th>${email}</th>
+                <th>${isEnrolled ? "\u0422\u0430\u043A" : "\u041D\u0456"}</th>
+                <th>\u{41D}\u{435}\u{43C}\u{430}\u{454}</th>
+              </tr>`;
+    }).join("");
+    return createMarkup;
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"b1I0R":[function(require,module,exports,__globalThis) {
@@ -771,7 +808,14 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "addStudent", ()=>addStudent);
 function addStudent(e) {
-// твій код
+    const options = {
+        method: "POST",
+        body: JSON.stringify(e),
+        headers: {
+            "Content-Type": "application/json; charset=UTF-8"
+        }
+    };
+    return fetch("http://localhost:3000/students", options).then((res)=>res.json());
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"cHHOw":[function(require,module,exports,__globalThis) {
