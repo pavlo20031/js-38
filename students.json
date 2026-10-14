@@ -3,13 +3,9 @@
     {
       "id": "1",
       "name": "Ivan Petrenko",
-      "age": 15,
+      "age": "16",
       "course": "Web Development",
-      "skills": [
-        "HTML",
-        "CSS",
-        "JavaScript"
-      ],
+      "skills": "HTML,CSS,JavaScript",
       "email": "ivan.petrenko@example.com",
       "isEnrolled": true
     },
@@ -28,13 +24,9 @@
     {
       "id": "3",
       "name": "Dmytro Shevchenko",
-      "age": 14,
+      "age": "14",
       "course": "Mobile App Development",
-      "skills": [
-        "Java",
-        "Kotlin",
-        "Android Studio"
-      ],
+      "skills": "Java,Kotlin,Android Studio",
       "email": "dmytro.shevchenko@example.com",
       "isEnrolled": false
     },
@@ -54,13 +46,9 @@
     {
       "id": "5",
       "name": "Mykola Bondarenko",
-      "age": 15,
+      "age": "15",
       "course": "Cybersecurity",
-      "skills": [
-        "Networking",
-        "Ethical Hacking",
-        "Linux"
-      ],
+      "skills": "Networking,Ethical Hacking,Linux",
       "email": "mykola.bondarenko@example.com",
       "isEnrolled": true
     }
