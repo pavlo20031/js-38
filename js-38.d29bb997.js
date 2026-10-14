@@ -722,6 +722,7 @@ var _deleteStudent = require("./js/deleteStudent");
 const tbodyRef = document.querySelector("tbody");
 const formRef = document.querySelector("#add-student-form");
 const btnRef = document.querySelector("#get-students-btn");
+let currentId = 0;
 btnRef.addEventListener("click", (evt)=>{
     renderList();
 });
@@ -738,12 +739,35 @@ formRef.addEventListener("submit", (evt)=>{
         email: element.email.value,
         isEnrolled: element.isEnrolled.checked
     };
-    (0, _addStudent.addStudent)(studentsData).then((res)=>renderList());
+    if (currentId === null) {
+        (0, _addStudent.addStudent)(studentsData).then((res)=>renderList());
+        return;
+    }
+    (0, _updateStudent.updateStudent)(studentsData, currentId).then((res)=>renderList());
     formRef.reset();
 });
 function renderList() {
     (0, _fetchStudents.getStudents)().then((res)=>tbodyRef.innerHTML = (0, _renderStudents.renderStudents)(res));
 }
+tbodyRef.addEventListener("click", (evt)=>{
+    if (evt.target.nodeName !== 'BUTTON') return;
+    const action = evt.target.dataset.action;
+    const tr = evt.target.closest("tr");
+    const id = tr.id;
+    if (action === "delete") {
+        (0, _deleteStudent.deleteStudent)(id).then((res)=>renderList());
+        return;
+    }
+    if (action === "edit") {
+        currentId = id;
+        formRef.elements[0].value = tr.querySelector(".name").textContent;
+        formRef.elements[1].value = tr.querySelector(".age").textContent;
+        formRef.elements[2].value = tr.querySelector(".course").textContent;
+        formRef.elements[3].value = tr.querySelector(".skills").textContent;
+        formRef.elements[4].value = tr.querySelector(".email").textContent;
+        formRef.elements[5].checked = tr.querySelector(".is-enrolled").textContent.trim() === "Student";
+    }
+});
 
 },{"./api/fetchStudents":"fhHaW","./render/renderStudents":"2omt9","./js/addStudent":"b1I0R","./js/updateStudent":"cHHOw","./js/deleteStudent":"f6Ycz"}],"fhHaW":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -791,13 +815,16 @@ function renderStudents(students) {
     const createMarkup = students.map(({ id, name, age, course, skills, email, isEnrolled })=>{
         return `<tr id="${id}">
                 <th>${id}</th>
-                <th>${name}</th>
-                <th>${age}</th>
-                <th>${course}</th>
-                <th>${skills}</th>
-                <th>${email}</th>
-                <th>${isEnrolled ? "\u0422\u0430\u043A" : "\u041D\u0456"}</th>
-                <th>\u{41D}\u{435}\u{43C}\u{430}\u{454}</th>
+                <th class="name">${name}</th>
+                <th class="age">${age}</th>
+                <th class="course">${course}</th>
+                <th class="skills">${skills}</th>
+                <th class="email">${email}</th>
+                <th class="is-enrolled">${isEnrolled ? "Student" : "Isn't student"}</th>
+                <th>
+                <button data-action="delete" class="delete" type="button">delete</button>
+                <button data-action="edit" class="update" type="button">update</button>
+                </th>
               </tr>`;
     }).join("");
     return createMarkup;
@@ -822,8 +849,15 @@ function addStudent(e) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "updateStudent", ()=>updateStudent);
-function updateStudent(id) {
-// твій код
+function updateStudent(e, id) {
+    const options = {
+        method: "PUT",
+        body: JSON.stringify(e),
+        headers: {
+            "Content-Type": "application/json; charset=UTF-8"
+        }
+    };
+    return fetch(`http://localhost:3000/students/${id}`, options).then((res)=>res.json());
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"f6Ycz":[function(require,module,exports,__globalThis) {
@@ -831,7 +865,9 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "deleteStudent", ()=>deleteStudent);
 function deleteStudent(id) {
-// твій код
+    return fetch(`http://localhost:3000/students/${id}`, {
+        method: "DELETE"
+    }).then((res)=>res.json());
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["7SvX3","kyksZ"], "kyksZ", "parcelRequire38fd", {})
