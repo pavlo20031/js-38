@@ -8,20 +8,17 @@ const tbodyRef = document.querySelector("tbody");
 const formRef = document.querySelector("#add-student-form");
 const btnRef = document.querySelector("#get-students-btn");
 
-let currentId = 0;
+let currentId = null;
 
 btnRef.addEventListener("click", (evt) => {
   renderList();
 });
-
-let lastId = 6;
 
 formRef.addEventListener("submit", (evt) => {
   evt.preventDefault();
   const element = evt.currentTarget.elements;
 
   const studentsData = {
-    id: lastId++,
     name: element.name.value,
     age: element.age.value,
     course: element.course.value,

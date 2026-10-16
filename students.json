@@ -7,7 +7,7 @@
       "course": "Web Development",
       "skills": "HTML,CSS,JavaScript",
       "email": "ivan.petrenko@example.com",
-      "isEnrolled": true
+      "isEnrolled": false
     },
     {
       "id": "2",
