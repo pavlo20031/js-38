@@ -722,16 +722,14 @@ var _deleteStudent = require("./js/deleteStudent");
 const tbodyRef = document.querySelector("tbody");
 const formRef = document.querySelector("#add-student-form");
 const btnRef = document.querySelector("#get-students-btn");
-let currentId = 0;
+let currentId = null;
 btnRef.addEventListener("click", (evt)=>{
     renderList();
 });
-let lastId = 6;
 formRef.addEventListener("submit", (evt)=>{
     evt.preventDefault();
     const element = evt.currentTarget.elements;
     const studentsData = {
-        id: lastId++,
         name: element.name.value,
         age: element.age.value,
         course: element.course.value,
@@ -851,7 +849,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "updateStudent", ()=>updateStudent);
 function updateStudent(e, id) {
     const options = {
-        method: "PUT",
+        method: "PATCH",
         body: JSON.stringify(e),
         headers: {
             "Content-Type": "application/json; charset=UTF-8"
