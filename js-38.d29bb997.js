@@ -739,10 +739,12 @@ formRef.addEventListener("submit", (evt)=>{
     };
     if (currentId === null) {
         (0, _addStudent.addStudent)(studentsData).then((res)=>renderList());
+        formRef.reset();
         return;
     }
     (0, _updateStudent.updateStudent)(studentsData, currentId).then((res)=>renderList());
     formRef.reset();
+    currentId = null;
 });
 function renderList() {
     (0, _fetchStudents.getStudents)().then((res)=>tbodyRef.innerHTML = (0, _renderStudents.renderStudents)(res));
@@ -849,7 +851,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "updateStudent", ()=>updateStudent);
 function updateStudent(e, id) {
     const options = {
-        method: "PATCH",
+        method: "PUT",
         body: JSON.stringify(e),
         headers: {
             "Content-Type": "application/json; charset=UTF-8"
