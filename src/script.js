@@ -27,11 +27,13 @@ formRef.addEventListener("submit", (evt) => {
     isEnrolled: element.isEnrolled.checked,
   };
   if (currentId === null) {
-      addStudent(studentsData).then((res) => renderList());
+    addStudent(studentsData).then((res) => renderList());
+      formRef.reset();
     return
   }
   updateStudent(studentsData, currentId).then((res) => renderList());
-formRef.reset();
+  formRef.reset();
+  currentId = null;
 });
 function renderList() {
   getStudents().then((res) => (tbodyRef.innerHTML = renderStudents(res)));
@@ -56,10 +58,5 @@ tbodyRef.addEventListener("click", (evt) => {
     formRef.elements[3].value = tr.querySelector(".skills").textContent;
     formRef.elements[4].value = tr.querySelector(".email").textContent;
     formRef.elements[5].checked = tr.querySelector(".is-enrolled").textContent.trim() === "Student";
-
-
-
-
-    
   }
 });
