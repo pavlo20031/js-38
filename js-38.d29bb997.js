@@ -726,7 +726,7 @@ let currentId = null;
 btnRef.addEventListener("click", (evt)=>{
     renderList();
 });
-formRef.addEventListener("submit", (evt)=>{
+formRef.addEventListener("submit", async (evt)=>{
     evt.preventDefault();
     const element = evt.currentTarget.elements;
     const studentsData = {
@@ -738,24 +738,30 @@ formRef.addEventListener("submit", (evt)=>{
         isEnrolled: element.isEnrolled.checked
     };
     if (currentId === null) {
-        (0, _addStudent.addStudent)(studentsData).then((res)=>renderList());
-        formRef.reset();
+        await (0, _addStudent.addStudent)(studentsData);
+        afterRender();
         return;
     }
-    (0, _updateStudent.updateStudent)(studentsData, currentId).then((res)=>renderList());
-    formRef.reset();
+    await (0, _updateStudent.updateStudent)(studentsData, currentId);
+    afterRender();
     currentId = null;
 });
-function renderList() {
-    (0, _fetchStudents.getStudents)().then((res)=>tbodyRef.innerHTML = (0, _renderStudents.renderStudents)(res));
+async function renderList() {
+    try {
+        const res = await (0, _fetchStudents.getStudents)();
+        tbodyRef.innerHTML = (0, _renderStudents.renderStudents)(res);
+    } catch (error) {
+        console.log(error);
+    }
 }
-tbodyRef.addEventListener("click", (evt)=>{
-    if (evt.target.nodeName !== 'BUTTON') return;
+tbodyRef.addEventListener("click", async (evt)=>{
+    if (evt.target.nodeName !== "BUTTON") return;
     const action = evt.target.dataset.action;
     const tr = evt.target.closest("tr");
     const id = tr.id;
     if (action === "delete") {
-        (0, _deleteStudent.deleteStudent)(id).then((res)=>renderList());
+        await (0, _deleteStudent.deleteStudent)(id);
+        renderList();
         return;
     }
     if (action === "edit") {
@@ -768,13 +774,24 @@ tbodyRef.addEventListener("click", (evt)=>{
         formRef.elements[5].checked = tr.querySelector(".is-enrolled").textContent.trim() === "Student";
     }
 });
+function afterRender() {
+    renderList();
+    formRef.reset();
+}
 
 },{"./api/fetchStudents":"fhHaW","./render/renderStudents":"2omt9","./js/addStudent":"b1I0R","./js/updateStudent":"cHHOw","./js/deleteStudent":"f6Ycz"}],"fhHaW":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getStudents", ()=>getStudents);
-function getStudents() {
-    return fetch("http://localhost:3000/students").then((res)=>res.json());
+async function getStudents() {
+    try {
+        const res = await fetch("http://localhost:3000/students");
+        if (res.status !== 200) throw new Error("Error");
+        const data = await res.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"jnFvT":[function(require,module,exports,__globalThis) {
@@ -834,7 +851,7 @@ function renderStudents(students) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "addStudent", ()=>addStudent);
-function addStudent(e) {
+async function addStudent(e) {
     const options = {
         method: "POST",
         body: JSON.stringify(e),
@@ -842,14 +859,21 @@ function addStudent(e) {
             "Content-Type": "application/json; charset=UTF-8"
         }
     };
-    return fetch("http://localhost:3000/students", options).then((res)=>res.json());
+    try {
+        const res = await fetch("http://localhost:3000/students", options);
+        if (!res.ok) throw new Error("Error");
+        const data = await res.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"cHHOw":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "updateStudent", ()=>updateStudent);
-function updateStudent(e, id) {
+async function updateStudent(e, id) {
     const options = {
         method: "PUT",
         body: JSON.stringify(e),
@@ -857,17 +881,31 @@ function updateStudent(e, id) {
             "Content-Type": "application/json; charset=UTF-8"
         }
     };
-    return fetch(`http://localhost:3000/students/${id}`, options).then((res)=>res.json());
+    try {
+        const res = await fetch(`http://localhost:3000/students/${id}`, options);
+        if (!res.ok) throw new Error("Error");
+        const data = await res.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"f6Ycz":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "deleteStudent", ()=>deleteStudent);
-function deleteStudent(id) {
-    return fetch(`http://localhost:3000/students/${id}`, {
-        method: "DELETE"
-    }).then((res)=>res.json());
+async function deleteStudent(id) {
+    try {
+        const res = await fetch(`http://localhost:3000/students/${id}`, {
+            method: "DELETE"
+        });
+        if (!res.ok) throw new Error("Error");
+        const data = await res.json();
+        return data;
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["7SvX3","kyksZ"], "kyksZ", "parcelRequire38fd", {})
